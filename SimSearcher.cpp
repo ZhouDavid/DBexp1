@@ -20,21 +20,13 @@ int SimSearcher::createIndex(const char *filename, unsigned q)
     ifstream fin(filename);
     if(!fin){cout<<"cannot open file!"<<endl; return FAILURE;}
     string line;
-   // unsigned int i =0;
+    int id =0;
     while(getline(fin,line)){
-        //if(!appeared(line,lines)){
-            lines.push_back(line);  //store in lines
-            line_lengths.push_back(line.length());
-            //vector<string> tmp;
-           // unique(line,tmp);//store in wordTable
-           // wordTable.push_back(pair<unsigned,vector<string> >(i,tmp));
-       // }
-      //  i++;
+        lines.push_back(line);  //store in lines
+        line_lengths.push_back(line.length());
+        addToGramList(line,id);
+        id++;
     }
-
-   // print(lines);
-   // cout<<"--------------------------------"<<endl;
-    //createQTable(lines,q);
     return SUCCESS;
 }
 
@@ -58,47 +50,44 @@ int SimSearcher::searchJaccard(const char *query, double threshold, vector<pair<
 int SimSearcher::searchED(const char *query, unsigned threshold, vector<pair<unsigned, unsigned> > &result)
 {
     result.clear();
-//    for(unsigned i=0;i<lines.size();i++){
-//        unsigned distance;
-//        string q = query;
-//        //unique(q);
-//
-//        bool ans = calED(q,i,threshold,distance);
-//        if(!ans) continue;
-//        result.push_back(pair<unsigned,unsigned>(lines[i].first,distance));
-//    }
-    string q = query;
-    for(int i = 0;i<lines.size();i++){
-        int r = int(q.length()-line_lengths[i]);
-        r = abs(r);
-        if(r>threshold)continue;
-        int distance = baoliCalED(q,lines[i],threshold);
-        if(distance<=threshold) result.push_back(pair<unsigned,unsigned>(i,distance));
-
+    string qstr = query;
+    if(q<=qstr.length()){
+        vector<string> grams;
+        genGram(qstr,grams);
+        int least_common = qstr.length()-q+1-threshold*q;
+        vector<int> candidate;
+        calCandidate(grams,least_common,candidate);
+        for(int i = 0 ;i<candidate.size();i++){
+            int index = candidate[i];
+            int distance = baoliCalED(qstr,lines[index],threshold);
+            result.push_back(pair<unsigned,unsigned>(index,distance));
+        }
     }
+
+
     return SUCCESS;
 }
 int SimSearcher::createQTable(vector<string> &lines, unsigned q) {
-    for(unsigned i = 0;i<lines.size();i++){
-        string tmp = lines[i];
-        vector<string>row;
-        if(tmp.length()<=q){
-            row.push_back(tmp);
-            QTable.push_back(row);
-            gramList.insert(tmp);
-        }
-        else{
-            for(unsigned j = 0;j<tmp.length()-q;j++){
-                string gram(tmp,j,q);
-                row.push_back(gram);
-                gramList.insert(gram);
-            }
-            row.push_back(string(tmp,tmp.length()-q,q));
-            gramList.insert(string(tmp,tmp.length()-q,q));
-            QTable.push_back(row);
-        }
-    }
-   // print(gramList);
+//    for(unsigned i = 0;i<lines.size();i++){
+//        string tmp = lines[i];
+//        vector<string>row;
+//        if(tmp.length()<=q){
+//            row.push_back(tmp);
+//            QTable.push_back(row);
+//            gramList.insert(tmp);
+//        }
+//        else{
+//            for(unsigned j = 0;j<tmp.length()-q;j++){
+//                string gram(tmp,j,q);
+//                row.push_back(gram);
+//                gramList.insert(gram);
+//            }
+//            row.push_back(string(tmp,tmp.length()-q,q));
+//            gramList.insert(string(tmp,tmp.length()-q,q));
+//            QTable.push_back(row);
+//        }
+//    }
+//   // print(gramList);
     return SUCCESS;
 }
 
@@ -301,4 +290,53 @@ int SimSearcher::baoliCalED(string& q,string& s,int threshold){
 //        cout<<endl;
 //    }
     return d[row-1][col-1];
+}
+
+int SimSearcher::genGram(const string& query,vector<string>& result){
+    result.clear();
+    int length = query.length();
+    result = split(query,this->q);
+    return SUCCESS;
+}
+
+int SimSearcher::calCandidate(vector<string>& grams,int threshold,vector<int>& candidateList){
+    //pair<string,vector<int>>;
+    //gramList;
+    int id[lines.size()];
+    for(int i  =0;i<lines.size();i++)id[i] = 0;
+    for(int i = 0;i<grams.size();i++){
+        int j = 0;
+        for(vector<pair<string,vector<int>>>::iterator it = gramList.begin();it!=gramList.end();it++,j++){
+            if(grams[i] == it->first){
+                for(int k = 0;k<it->second.size();k++)
+                id[it->second[k]]++;
+            }
+        }
+    }
+    for(int i = 0;i<lines.size();i++){
+        if(id[i]>=threshold) candidateList.push_back(i);
+    }
+
+    return SUCCESS;
+}
+
+void SimSearcher::addToGramList(const string s,int id){
+    vector<string> gram = split(s,this->q);
+    for(int i = 0;i<gram.size();i++){
+        bool flag = false;
+        for(int j = 0;j<gramList.size();j++){
+
+            if(gram[i] == gramList[j].first){
+                gramList[j].second.push_back(id);
+                flag = true;
+                break;
+            }
+        }
+        if(!flag){
+            vector<int> v;v.push_back(id);
+            pair<string,vector<int>> tmp(gram[i],v);
+            gramList.push_back(tmp);
+        }
+
+    }
 }

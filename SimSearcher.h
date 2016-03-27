@@ -25,7 +25,6 @@ class SimSearcher
 {
 private:
     unsigned q;
-    //int d[2100][256];
 
     void print(const vector<string>& lines);
     void print(const vector<vector<string>> table);
@@ -43,6 +42,9 @@ private:
     void unique(string& str,vector<string>& set);
     vector<pair<unsigned,vector<string> > >wordTable;
     int baoliCalED(string& query,string& s,int threshold);
+    int genGram(const string& query,vector<string>& result);
+    int calCandidate(vector<string>& grams,int threshold,vector<int>& candidateList);
+    void addToGramList(const string s,int id);
 
 public:
     SimSearcher();
@@ -50,7 +52,7 @@ public:
     vector<string> lines;   //input lines
     vector<int> line_lengths;
     vector<vector<string> > QTable;//two dimension string table, every line stands for a q-gram set for one input line
-    set<string> gramList;   //store all q-grams in lines
+    vector<pair<string,vector<int>>> gramList;   //store all q-grams in lines
     int createQTable(vector<string>&lines ,unsigned q);
     int createList(vector<string>& lines,unsigned q);    //create inverted list for q-gram
     double calSimilarity(string s1,string s2,unsigned q);   //calculate  s1 s2 Jaccard similarity

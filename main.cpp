@@ -1,22 +1,23 @@
 #include "SimSearcher.h"
-#include <iostream>
+
 using namespace std;
 
 int main(int argc, char **argv)
 {
     SimSearcher searcher;
-    vector<vector<string>>QGramTable;
+
     vector<pair<unsigned, unsigned> > resultED;
     vector<pair<unsigned, double> > resultJaccard;
 
-    unsigned q = 2, edThreshold = 2;
+    unsigned q = 3, edThreshold = 3;
     double jaccardThreshold = 0.85;
 
     searcher.createIndex(argv[1], q);
    // searcher.searchJaccard("query", jaccardThreshold, resultJaccard);
-    searcher.searchED("sittingSunday",3, resultED);
-
+    searcher.searchED("ebay", edThreshold, resultED);
+    for(int i = 0;i<resultED.size();i++){
+        cout<<resultED[i].first<<' '<<resultED[i].second<<endl;
+    }
     return 0;
-
 }
 

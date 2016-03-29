@@ -9,12 +9,12 @@ int main(int argc, char **argv)
     vector<pair<unsigned, unsigned> > resultED;
     vector<pair<unsigned, double> > resultJaccard;
 
-    unsigned q = 3, edThreshold = 3;
+    unsigned q = 2, edThreshold = 1;
     double jaccardThreshold = 0.85;
 
     searcher.createIndex(argv[1], q);
    // searcher.searchJaccard("query", jaccardThreshold, resultJaccard);
-    searcher.searchED("ebay", edThreshold, resultED);
+    searcher.searchED("shtick", edThreshold, resultED);
     for(int i = 0;i<resultED.size();i++){
         cout<<resultED[i].first<<' '<<resultED[i].second<<endl;
     }

@@ -11,16 +11,16 @@
     <orderEntry type="module-library">
       <library name="Header Search Paths">
         <CLASSES>
-          <root url="file://E:/Develop/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" />
-          <root url="file://E:/Develop/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include-fixed" />
-          <root url="file://E:/Develop/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" />
-          <root url="file://E:/Develop/Dev-Cpp/MinGW64/include" />
+          <root url="file://E:/Develop/MinGW/lib/gcc/mingw32/4.8.1/include" />
+          <root url="file://E:/Develop/MinGW/lib/gcc/mingw32/4.8.1/include-fixed" />
+          <root url="file://E:/Develop/MinGW/mingw32/include" />
+          <root url="file://E:/Develop/MinGW/include" />
         </CLASSES>
         <SOURCES>
-          <root url="file://E:/Develop/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" />
-          <root url="file://E:/Develop/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include-fixed" />
-          <root url="file://E:/Develop/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" />
-          <root url="file://E:/Develop/Dev-Cpp/MinGW64/include" />
+          <root url="file://E:/Develop/MinGW/lib/gcc/mingw32/4.8.1/include" />
+          <root url="file://E:/Develop/MinGW/lib/gcc/mingw32/4.8.1/include-fixed" />
+          <root url="file://E:/Develop/MinGW/mingw32/include" />
+          <root url="file://E:/Develop/MinGW/include" />
         </SOURCES>
       </library>
     </orderEntry>

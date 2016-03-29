@@ -29,6 +29,7 @@ public:
 	int recordSize;
 	int qq;
 	int qid;
+	int d[256][256];
 
 	int calED(const string& s1,const string& s2,int threshold);
 	int min3(int a,int b,int c){int t = a<b?a:b;return t<c?t:c;}

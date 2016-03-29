@@ -12,7 +12,7 @@ SimSearcher::~SimSearcher()
 
 int SimSearcher::createIndex(const char *filename, unsigned q)
 {
-    this->qq = 2;
+    this->qq = q;
     ifstream fin(filename);
     string line;
     int id = 0;
@@ -21,7 +21,7 @@ int SimSearcher::createIndex(const char *filename, unsigned q)
         records.push_back(line);
         updateList(line,id++);
     }
-    
+
     recordSize = records.size();
 
     fin.close();

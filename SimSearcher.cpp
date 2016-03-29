@@ -9,7 +9,6 @@ SimSearcher::SimSearcher()
 
 SimSearcher::~SimSearcher()
 {
-
 }
 
 int SimSearcher::createIndex(const char *filename, unsigned q)
@@ -26,11 +25,7 @@ int SimSearcher::createIndex(const char *filename, unsigned q)
         updateList(records[i],i);
     }
     recordSize = records.size();
-    for(int i = 0;i<recordSize;i++){
-        counters[i][0] = 0;
-        counters[i][1]= 0;
-    }
-    //sort(inverList.begin(),inverList.end());
+    sort(inverList.begin(),inverList.end());
     fin.close();
     return SUCCESS;
 }
@@ -52,26 +47,12 @@ int SimSearcher::searchED(const char *query, unsigned threshold, vector<pair<uns
     //vector<int>gramIndex;
     //genGramList(q,gramIndex);
     //scanCount(gramIndex,candidate,T,qid++);
-//
-//    for(int i =0;i<candidate.size();i++){
-//       // cout<<candidate[i]<<' '<<records[candidate[i]]<<endl;
-//    }
-
-    int size = records.size();
-    int id;
-    for(int i = 0;i<size;i++){
-        id =i;
+    int size = 1;
+    for(int id = 0;id<recordSize;id++){
         int len2 = records[id].length();
-
         if(abs(len1-len2)>thrs) continue;
-
         int distance = 0;
-        if(len1<len2){
-            distance = calED(q,records[id],thrs);
-        }
-        else{
-            distance = calED(records[id],q,thrs);
-        }
+        distance = len1 < len2 ? calED(q, records[id], thrs) : calED(records[id], q, thrs);
         if(distance == -1) continue;
         if(distance<=thrs) result.push_back(pair<unsigned,unsigned>(id,distance));
     }
@@ -81,8 +62,6 @@ int SimSearcher::searchED(const char *query, unsigned threshold, vector<pair<uns
 int SimSearcher::calED(const string& s1,const string& s2,int threshold) {   //s2 must be longer thant s1!
     int row = s1.length();
     int col = s2.length();
-    //int d[row+1][col+1];
-
     for(int i =0;i<=threshold&&i<=col;i++)d[0][i]=i;
     for(int i = 0;i<=threshold&&i<=row;i++)d[i][0]=i;
     int start;int end;int last_end;
@@ -180,20 +159,13 @@ void SimSearcher::genGramList(const string& q,vector<int>& gramIndex){
 }
 
 void SimSearcher::scanCount(vector<int>&gramIndex,vector<int>&candidate,int T,int qid){
+    for(int i = 0;i<recordSize;i++) counters[i] = 0;
     for(int i = 0;i<gramIndex.size();i++){
         int index = gramIndex[i];
         int size = inverList[index].list.size();
         for(int j = 0;j<size;j++){
             int id = inverList[index].list[j];
-            if(counters[id][1] == qid){
-                counters[id][0]++;
-                if(counters[id][0]==T) candidate.push_back(id);
-            }
-            else{
-                counters[id][1]=qid;
-                counters[id][0]=1;
-                //if(counters[id][0]>=T) candidate.push_back(id);
-            }
+            counters[id]++;
         }
     }
 //    sort(candidate.begin(),candidate.end());

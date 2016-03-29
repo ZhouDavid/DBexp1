@@ -9,7 +9,7 @@ int main(int argc, char **argv)
     vector<pair<unsigned, unsigned> > resultED;
     vector<pair<unsigned, double> > resultJaccard;
 
-    unsigned q = 2, edThreshold = 1;
+    unsigned q = 2, edThreshold = 2;
     double jaccardThreshold = 0.85;
 
     searcher.createIndex(argv[1], q);

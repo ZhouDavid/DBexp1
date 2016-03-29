@@ -25,7 +25,7 @@ class SimSearcher
 public:
 	vector<string> records;
 	vector<Entry> inverList;
-	int counters[100000][2];
+	int counters[100000];
 	int recordSize;
 	int qq;
 	int qid;

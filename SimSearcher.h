@@ -6,15 +6,17 @@
 #include <algorithm>
 #include <string>
 #include <map>
+#include <unordered_map>
 using namespace std;
+using namespace __gnu_cxx;
 const int SUCCESS = 0;
 const int FAILURE = 1;
 class SimSearcher
 {
 public:
 	vector<string> records;
-	map<string,vector<int> > invertList;
-	//vector<vector<int> >orderList;  //sort the invertList by size of eachlist
+	unordered_map<string,vector<int> > invertList;
+	vector<vector<int> >orderList;  //sort the invertList by size of eachlist
 	int recordSize;
 	int qq;
 	int d[256][256];

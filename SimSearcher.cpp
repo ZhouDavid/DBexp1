@@ -21,8 +21,8 @@ int SimSearcher::createIndex(const char *filename, unsigned q)
         records.push_back(line);
         updateList(line,id++);
     }
-
     recordSize = records.size();
+
 
     fin.close();
     return SUCCESS;
@@ -159,7 +159,7 @@ void SimSearcher::scanCount(const string& q,int T,vector<int>& candidate){
     splitIntoGram(q,qq,grams);
     int gsize = grams.size();
     for(int i = 0;i<recordSize;i++) counters[i] = 0;
-    map<string,vector<int> >::iterator it;
+    unordered_map<string,vector<int> >::iterator it;
     for(int i = 0;i<gsize;i++){
         it = invertList.find(grams[i]);
         if(it!=invertList.end()){

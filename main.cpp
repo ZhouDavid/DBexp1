@@ -2,16 +2,17 @@
 #include <fstream>
 #include <string>
 #include <time.h>
+#include <hash_map>
+using namespace std;
 
 int main(int argc, char **argv)
 {
     clock_t start,end;
     SimSearcher searcher;
-
     vector<pair<unsigned, unsigned> > resultED;
     vector<pair<unsigned, double> > resultJaccard;
 
-    unsigned q = 2, edThreshold = 3;
+    unsigned q = 3, edThreshold = 3;
     double jaccardThreshold = 0.85;
     ifstream fin("E:\\semester\\dabase-training\\hw1\\test1\\query.txt");
 

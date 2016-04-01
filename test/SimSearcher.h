@@ -17,7 +17,7 @@ class SimSearcher
 {
 public:
 	vector<string> records;
-	unordered_map<string,vector<int> > gram_invertList;
+	unordered_map<string,vector<int> > invertList;
 	unordered_map<string,vector<int> > word_invertList;
 	//vector<pair<string,int> > listSize;  // 记录每个qgram-list的 size,并排序
 	//unordered_map<string,int> position; // 查询一个gram,给出它在listSize中的下标
@@ -29,7 +29,7 @@ public:
 	int recordSize;
 	int qq;
 	int d[256][256];
-	int counters[220000];
+	int counters[100000];
 	vector<int> word_counter;
 	int smin;  //记录中最小串的长度
 
@@ -39,9 +39,9 @@ public:
 	void updateList(const string& s,int id);
 	int updateWordList(const string& s,int id);   //返回unique words 数量
 	int splitIntoGram(const string& s,int q,vector<string>& result);
-	void divideSkip(unordered_map<string,vector<int> >&invertList,const vector<string>& grams,int T,vector<int>& candidate);
+	void divideSkip(const vector<string>& grams,int T,vector<int>& candidate);
 	void mergeSkip(int T,vector<vector<int> >&,unordered_map<int,int>&result);
-	void split(const string& q,char s,vector<string>&words);
+	int split(const string& q,char s,vector<string>&words);
 
 public:
 	SimSearcher();
@@ -50,5 +50,6 @@ public:
 	int createIndex(const char *filename, unsigned q);
 	int searchJaccard(const char *query, double threshold, std::vector<std::pair<unsigned, double> > &result);
 	int searchED(const char *query, unsigned threshold, std::vector<std::pair<unsigned, unsigned> > &result);
+
 };
 

@@ -48,31 +48,24 @@ int SimSearcher::searchJaccard(const char *query, double threshold, vector<pair<
 {
     result.clear();
     string q = query;
+    int len1 = q.length();
     vector<string> words;
     split(q,' ',words);
     //words 去重
     sort(words.begin(),words.end());
     words.erase(unique(words.begin(),words.end()),words.end());
+
     vector<int> candidate;
     int word_size = words.size();
     int T = my_max(threshold*word_size,(smin+word_size)*threshold/(threshold+1));
     scanCount(this->word_invertList,words,T,candidate);
     sort(candidate.begin(),candidate.end());
-    if(T>=1){
-        int size = candidate.size();
-        for(int i = 0;i<size;i++){
-            int id = candidate[i];
-            double jaccard = double(counters[id])/double(word_counter[id]+word_size-counters[id]);
-            if(jaccard>=threshold) result.push_back(pair<unsigned,double>(id,jaccard));
-        }
+    int size = candidate.size();
+    for(int i = 0;i<size;i++){
+        int id = candidate[i];
+        double jaccard = counters[id]/(word_counter[id]+word_size);
+        if(jaccard>=threshold) result.push_back(pair<unsigned,double>(id,jaccard));
     }
-    else{
-        for(int i = 0;i<recordSize;i++){
-            double jaccard = double(counters[i])/double(word_counter[i]+word_size-counters[i]);
-            if(jaccard>=threshold) result.push_back(pair<unsigned,double>(i,jaccard));
-        }
-    }
-
     return SUCCESS;
 }
 
@@ -92,7 +85,7 @@ int SimSearcher::searchED(const char *query, unsigned threshold, vector<pair<uns
     int T = len1-qq+1-thrs*qq;
     if(T>=1){
         vector<int>candidate;
-        scanCount(this->gram_invertList,grams,T,candidate);
+        scanCount(this->invertList,grams,T,candidate);
         //divideSkip(grams,T,candidate);
         int size = candidate.size();
         sort(candidate.begin(),candidate.end());
@@ -197,12 +190,11 @@ int SimSearcher::splitIntoGram(const string& s,int q,vector<string>& result){
 void SimSearcher::updateList(const string& s,const int id){
     vector<string>grams;
     if(splitIntoGram(s,qq,grams)==SUCCESS){
-        //sort(grams.begin(),grams.end());
-        //grams.erase(unique(grams.begin(),grams.end()),grams.end());
-
+//        sort(grams.begin(),grams.end());
+//        grams.erase(unique(grams.begin(),grams.end()),grams.end());
         int gsize = grams.size();
         for(int i = 0;i<gsize;i++){
-            gram_invertList[grams[i]].push_back(id);
+            invertList[grams[i]].push_back(id);
         }
     }
 }
@@ -229,14 +221,13 @@ void SimSearcher::scanCount(unordered_map<string,vector<int> >&invertList,const 
         if(it!=invertList.end()){
             for(int j =0;j<it->second.size();j++){
                 counters[it->second[j]]++;
-                if(counters[it->second[j]] == T)
-                    candidate.push_back(it->second[j]);
+                if(counters[it->second[j]] == T) candidate.push_back(it->second[j]);
             }
         }
     }
 }
 
-void SimSearcher::divideSkip(unordered_map<string,vector<int> >&invertList,const vector<string>& grams,int T,vector<int>& candidate){
+void SimSearcher::divideSkip(const vector<string>& grams,int T,vector<int>& candidate){
     vector<vector<int> > selected;
     for(int i = 0;i<grams.size();i++){
         if(invertList.find(grams[i])!=invertList.end())
@@ -313,7 +304,7 @@ void SimSearcher::mergeSkip(int T,vector<vector<int>>&lists,unordered_map<int,in
     }
 }
 
-void SimSearcher::split(const string& str,char s,vector<string>&words){
+int SimSearcher::split(const string& str,char s,vector<string>&words){
     int len = str.length();
     int start = 0;
     for(int i = 0;i<len;i++){
@@ -322,7 +313,6 @@ void SimSearcher::split(const string& str,char s,vector<string>&words){
             while(str[i+1] == s){
                 i++;
             }
-            start = i+1;
         }
     }
     words.push_back(str.substr(start,len-start));
